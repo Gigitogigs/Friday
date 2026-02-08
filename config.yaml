@@ -1,0 +1,131 @@
+# Friday Configuration
+# ====================
+# This file controls the behavior of the Friday Offline Personal Assistant.
+# All settings here affect how Friday operates on your machine.
+
+friday:
+  version: "0.1.0"
+  name: "Friday"
+  description: "Offline Personal Assistant"
+
+# Model Configuration
+# -------------------
+model:
+  name: "deepseek-r1:1.5b"
+  temperature: 0.7
+  max_tokens: 2048
+  timeout: 120
+
+# Permission & Safety Configuration
+# ---------------------------------
+# This is the core security configuration. Be careful when modifying.
+permissions:
+  # Default permission level for unknown actions
+  # Options: READ, SUGGEST, SAFE_WRITE, SYSTEM_WRITE, EXECUTE, ADMIN
+  default_level: SUGGEST
+  
+  # Actions that are automatically approved (no user prompt needed)
+  # These should only be read-only, non-destructive operations
+  auto_approve:
+    - "list_files"
+    - "list_directory"
+    - "read_file"
+    - "get_file_info"
+    - "get_system_info"
+    - "get_time"
+    - "get_cpu_usage"
+    - "get_memory_usage"
+    - "get_disk_usage"
+    - "search_files"
+    - "view_*"
+  
+  # Actions that always require explicit user approval
+  # Even if whitelisted elsewhere, these will prompt for confirmation
+  require_approval:
+    - "delete_*"
+    - "remove_*"
+    - "execute_*"
+    - "run_command"
+    - "shell_*"
+    - "write_file"
+    - "modify_*"
+    - "move_*"
+    - "rename_*"
+    - "install_*"
+    - "uninstall_*"
+    - "system_*"
+  
+  # Actions that are permanently blocked
+  # These will NEVER execute, regardless of user approval
+  blacklist:
+    - "format_disk"
+    - "format c:"
+    - "rm -rf /"
+    - "rm -rf /*"
+    - "del /f /s /q c:\\*"
+    - "deltree"
+    - "rd /s /q c:\\"
+    - "shutdown"
+    - "restart"
+    - ":(){:|:&};:"  # Fork bomb
+
+# Logging Configuration
+# ---------------------
+logging:
+  # Path to the audit log file (relative to Friday root)
+  path: "data/audit_log.jsonl"
+  
+  # Log level: DEBUG, INFO, WARNING, ERROR
+  level: INFO
+  
+  # Number of days to retain logs
+  retention_days: 30
+  
+  # Console output
+  console: true
+
+# Data Storage
+# ------------
+data:
+  # Base directory for all data files
+  base_dir: "data"
+  
+  # Tasks database
+  tasks_file: "data/tasks.json"
+  
+  # Memory database
+  memory_db: "data/memory.db"
+  
+  # Preferences
+  preferences_file: "data/preferences.yaml"
+
+# Module Configuration
+# --------------------
+modules:
+  os_operator:
+    enabled: true
+    # Paths that are safe to operate on without extra confirmation
+    safe_paths:
+      - "~"
+      - "~/Documents"
+      - "~/Downloads"
+      - "~/Desktop"
+    # Paths that require extra confirmation
+    protected_paths:
+      - "C:\\Windows"
+      - "C:\\Program Files"
+      - "/etc"
+      - "/usr"
+      - "/bin"
+      - "/sbin"
+  
+  task_manager:
+    enabled: true
+    default_priority: 2
+  
+  knowledge_base:
+    enabled: false  # Enable after Day 8
+    index_paths: []
+  
+  automation:
+    enabled: false  # Enable after Day 17

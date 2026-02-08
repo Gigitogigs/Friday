@@ -1,0 +1,22 @@
+# Friday - Offline Personal Assistant
+# Dependencies
+
+# Core
+click>=8.1.0
+pyyaml>=6.0
+pydantic>=2.0
+
+# Already installed (from pip list)
+# fastapi>=0.100.0
+# uvicorn>=0.20.0
+
+# Utilities
+colorama>=0.4.6
+rich>=13.0.0
+
+# Future dependencies (uncomment as needed)
+# sentence-transformers>=2.0.0  # Day 8: Knowledge Base
+# apscheduler>=3.10.0            # Day 5: Task Manager (scheduling)
+# watchdog>=3.0.0                # Day 8: File watcher
+# cryptography>=41.0.0           # Day 9: Encryption
+# psutil>=5.9.0                  # Day 2: System info
