@@ -38,7 +38,7 @@ Friday is a comprehensive offline personal assistant that helps with task manage
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/Gigitogigs/Friday.git
 cd Friday
 
 #Create a virtual environment
@@ -275,7 +275,7 @@ MIT License
 
 ## 📞 Support
 
-For issues or questions, please [open an issue](link-to-issues).
+For issues or questions, please [open an issue](https://github.com/Gigitogigs/Friday/issues).
 
 ---
 

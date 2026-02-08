@@ -78,7 +78,7 @@ We are committed to providing a welcoming and inclusive environment for all cont
 ## Development Process
 
 ### Finding Issues to Work On
-- Check the [Issues](../../issues) page for open tasks
+- Check the [Issues](https://github.com/Gigitogigs/Friday/issues) page for open tasks
 - Look for issues labeled `good first issue` or `help wanted`
 - Comment on an issue to let others know you're working on it
 
@@ -260,8 +260,8 @@ If you're implementing one of the planned modules:
 
 ## Questions?
 
-- Open a [Discussion](../../discussions) for general questions
-- Create an [Issue](../../issues) for bugs or feature requests
+- Open a [Discussion](https://github.com/Gigitogigs/Friday/discussions) for general questions
+- Create an [Issue](https://github.com/Gigitogigs/Friday/issues) for bugs or feature requests
 - Check existing issues and discussions first
 
 ---

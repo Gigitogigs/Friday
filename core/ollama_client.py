@@ -80,6 +80,8 @@ class OllamaClient:
                 ["ollama", "list"],
                 capture_output=True,
                 text=True,
+                encoding='utf-8',
+                errors='replace',
                 timeout=5
             )
             return result.returncode == 0
@@ -98,6 +100,8 @@ class OllamaClient:
                 ["ollama", "list"],
                 capture_output=True,
                 text=True,
+                encoding='utf-8',
+                errors='replace',
                 timeout=10
             )
             if result.returncode != 0:
@@ -133,6 +137,55 @@ class OllamaClient:
                 return True
         return False
     
+    def _filter_reasoning(self, text: str) -> str:
+        """
+        Filter out reasoning/thinking process from DeepSeek R1 responses.
+        
+        DeepSeek R1 models output their reasoning in a specific format.
+        This method extracts only the final answer.
+        
+        Args:
+            text: Raw model output
+            
+        Returns:
+            Filtered text with only the final answer
+        """
+        # DeepSeek R1 typically wraps reasoning in specific patterns
+        # Common patterns: "Thinking...", "...done thinking.", or between <think> tags
+        
+        # Remove "Thinking..." prefix and "...done thinking." suffix
+        lines = text.split('\n')
+        filtered_lines = []
+        skip_thinking = False
+        
+        for line in lines:
+            line_lower = line.lower().strip()
+            
+            # Skip lines that indicate thinking process
+            if 'thinking...' in line_lower or 'okay, so' in line_lower:
+                skip_thinking = True
+                continue
+            
+            if '...done thinking.' in line_lower or 'done thinking' in line_lower:
+                skip_thinking = False
+                continue
+            
+            # Skip empty lines during thinking
+            if skip_thinking:
+                continue
+            
+            # Keep non-thinking lines
+            if line.strip():
+                filtered_lines.append(line)
+        
+        result = '\n'.join(filtered_lines).strip()
+        
+        # If filtering removed everything, return original
+        if not result:
+            return text
+        
+        return result
+    
     def chat(
         self,
         messages: List[Dict[str, str]],
@@ -167,7 +220,7 @@ class OllamaClient:
         prompt += "\nAssistant:"
         
         try:
-            # Use ollama run command
+            # Use ollama run command with UTF-8 encoding
             result = subprocess.run(
                 [
                     "ollama", "run", self.model,
@@ -175,18 +228,31 @@ class OllamaClient:
                 ],
                 capture_output=True,
                 text=True,
+                encoding='utf-8',
+                errors='replace',  # Replace invalid characters instead of crashing
                 timeout=self.timeout
             )
             
             if result.returncode != 0:
                 return ChatResponse(
-                    content=f"Error: {result.stderr}",
+                    content=f"Error: {result.stderr or 'Unknown error'}",
                     model=self.model,
                     done=True
                 )
             
+            # Check if stdout is None
+            if result.stdout is None:
+                return ChatResponse(
+                    content="Error: No response from model",
+                    model=self.model,
+                    done=True
+                )
+            
+            # Filter out reasoning/thinking process
+            filtered_content = self._filter_reasoning(result.stdout.strip())
+            
             return ChatResponse(
-                content=result.stdout.strip(),
+                content=filtered_content,
                 model=self.model,
                 done=True
             )
@@ -266,6 +332,8 @@ class OllamaClient:
                 ["ollama", "show", self.model],
                 capture_output=True,
                 text=True,
+                encoding='utf-8',
+                errors='replace',
                 timeout=10
             )
             
@@ -296,6 +364,8 @@ class OllamaClient:
                 ["ollama", "pull", model],
                 capture_output=True,
                 text=True,
+                encoding='utf-8',
+                errors='replace',
                 timeout=600  # 10 minutes for large models
             )
             return result.returncode == 0
