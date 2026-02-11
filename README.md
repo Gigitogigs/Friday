@@ -125,6 +125,40 @@ Friday/
 
 ---
 
+## 🔧 How It Works
+
+Friday operates on a **three-layer architecture** designed for security, transparency, and modularity:
+
+### 1. **Security Layer** (Permission Manager)
+Every action flows through the Permission Manager, which:
+- Evaluates the action against 6 permission levels (READ → ADMIN)
+- Checks blacklist/whitelist patterns
+- Requests user approval for destructive operations
+- Provides dry-run previews before execution
+
+### 2. **Intelligence Layer** (Ollama Client)
+- Communicates with locally-running Ollama LLM
+- Processes natural language commands
+- Filters reasoning tokens to show clean responses
+- Maintains conversation history for context
+
+### 3. **Execution Layer** (Modules)
+- OS Operator: File/folder operations
+- Task Manager: GTD-style task tracking
+- Knowledge Base: Document indexing
+- *(24 modules total, incrementally implemented)*
+
+### Data Flow
+```
+User Input → CLI → LLM (Ollama) → Action Request → Permission Check → Execute/Deny → Audit Log
+```
+
+All operations are logged to `data/audit_log.jsonl` for complete transparency.
+
+**For detailed technical documentation, see [ARCHITECTURE.md](ARCHITECTURE.md).**
+
+---
+
 ## 🔒 Security & Privacy
 
 Friday is built with **privacy-first** principles:
