@@ -21,7 +21,7 @@ model:
 # This is the core security configuration. Be careful when modifying.
 permissions:
   # Default permission level for unknown actions
-  # Options: READ, SUGGEST, SAFE_WRITE, SYSTEM_WRITE, EXECUTE, ADMIN
+  # Options: READ, SUGGEST, SAFE_WRITE, SYSTEM_WRITE, EXECUTE, ADMIN, SAFE_DELETE, DANGEROUS_DELETE
   default_level: SUGGEST
   
   # Actions that are automatically approved (no user prompt needed)
@@ -31,23 +31,30 @@ permissions:
     - "list_directory"
     - "read_file"
     - "get_file_info"
+    - "get_file_metadata"
     - "get_system_info"
     - "get_time"
     - "get_cpu_usage"
     - "get_memory_usage"
     - "get_disk_usage"
     - "search_files"
+    - "create_search_index"
     - "view_*"
   
   # Actions that always require explicit user approval
   # Even if whitelisted elsewhere, these will prompt for confirmation
   require_approval:
     - "delete_*"
+    - "delete_item"
     - "remove_*"
     - "execute_*"
     - "run_command"
     - "shell_*"
     - "write_file"
+    - "append_to_file"
+    - "copy_file"
+    - "move_file"
+    - "create_directory"
     - "modify_*"
     - "move_*"
     - "rename_*"
@@ -79,7 +86,7 @@ logging:
   level: INFO
   
   # Number of days to retain logs
-  retention_days: 30
+  retention_days: 90
   
   # Console output
   console: true
@@ -95,6 +102,9 @@ data:
   
   # Memory database
   memory_db: "data/memory.db"
+  
+  # File search index (SQLite)
+  file_index_db: "data/file_index.db"
   
   # Preferences
   preferences_file: "data/preferences.yaml"
@@ -122,6 +132,22 @@ modules:
   task_manager:
     enabled: true
     default_priority: 2
+  
+  file_indexer:
+    enabled: true
+    # Path to the SQLite search index database
+    db_path: "data/file_index.db"
+    # Root directory to index (defaults to current working directory)
+    index_root: "~"
+    # Folders to skip during indexing
+    excluded_dirs:
+      - "C:\\Windows"
+      - "C:\\Program Files"
+      - "C:\\Program Files (x86)"
+      - ".git"
+      - "__pycache__"
+      - "node_modules"
+      - ".venv"
   
   knowledge_base:
     enabled: false  # Enable after Day 8

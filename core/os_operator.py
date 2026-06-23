@@ -8,11 +8,13 @@ import glob
 
 from .logger import ActionType, ActionStatus, AuditLogger
 from .permission_manager import PermissionManager, PermissionLevel, ActionResult, ActionRequest
+from .file_indexer import FileIndexer
 
 class OS_Operator:
-    def __init__(self, permission_manager: PermissionManager, logger: AuditLogger):
+    def __init__(self, permission_manager: PermissionManager, logger: AuditLogger, file_indexer: FileIndexer = None):
         self.logger = logger
         self.permission_manager = permission_manager
+        self.file_indexer = file_indexer
 
     def _execute_command(self, permission_level, command, dry_run=False):
         """
@@ -704,4 +706,72 @@ class OS_Operator:
                 status="failed",
                 message=f"Error getting metadata for {target_path}: {str(e)}"
             )
+
+    def search_files(self, query: str, max_results: int = 10) -> ActionResult:
+        """
+        Search for files using the FileIndexer.
         
+        Args:
+            query: The search query (filename or partial filename).
+            max_results: The maximum number of results to return.
+            
+        Returns:
+            ActionResult: A result object containing a list of matching file paths in the data field.
+        """
+        # Validation
+        if not self.file_indexer:
+            return ActionResult(
+                success=False,
+                status="failed",
+                message="File indexer is not configured or initialized."
+            )
+
+        if not query or not query.strip():
+            return ActionResult(
+                success=False,
+                status="failed",
+                message="Search query cannot be empty."
+            )
+
+        action = ActionRequest(
+            action_type="search_files",
+            description=f"Search for files matching '{query}'",
+            target=query,
+            required_level=PermissionLevel.READ
+        )
+
+        permission_check = self.permission_manager.check_permission(action)
+        if not permission_check.success:
+            return permission_check
+            
+        try:
+            results = self.file_indexer.search_files(query, max_results)
+            
+            self.logger.log_action(
+                action_type=ActionType.READ,
+                description=f"Searched for files matching '{query}'",
+                permission_level=PermissionLevel.READ.value,
+                status=ActionStatus.SUCCESS,
+                metadata={"query": query, "results_count": len(results)}
+            )
+            
+            return ActionResult(
+                success=True,
+                status="success",
+                message=f"Found {len(results)} matching files.",
+                data=results
+            )
+            
+        except Exception as e:
+            self.logger.log_action(
+                action_type=ActionType.READ,
+                description=f"Error searching for files matching '{query}'",
+                permission_level=PermissionLevel.READ.value,
+                status=ActionStatus.FAILED,
+                metadata={"error": str(e)}
+            )
+            return ActionResult(
+                success=False,
+                status="failed",
+                message=f"Error executing search: {str(e)}"
+            )
