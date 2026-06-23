@@ -28,6 +28,8 @@ class PermissionLevel(Enum):
     SYSTEM_WRITE = 3   # System modifications (configs, etc.)
     EXECUTE = 4        # Run shell commands
     ADMIN = 5          # Elevated/dangerous operations
+    SAFE_DELETE = 6    # Low-risk deletions (user files)
+    DANGEROUS_DELETE = 7 # High-risk deletions (system files/directories)
 
 
 @dataclass
