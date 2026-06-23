@@ -8,14 +8,14 @@ Friday is a comprehensive offline personal assistant that helps with task manage
 
 ## 🌟 Features
 
-### Currently Implemented (Day 1)
+### Currently Implemented (Day 1 & 2)
 - ✅ **Permission & Safety Governor** - Security-first architecture with approval workflows
 - ✅ **Audit Logging** - Complete action history in append-only JSONL format
-- ✅ **Local LLM Integration** - Powered by Ollama (deepseek-r1:1.5b)
+- ✅ **Local LLM Integration** - Powered by Ollama
 - ✅ **CLI Interface** - Interactive chat and command-line tools
+- ✅ **OS Operator & Search** - Full file management with persistent SQLite indexing
 
-### Planned Features (Days 2-24)
-- 📁 OS Operator - File/folder operations with safety checks
+### Planned Features (Days 3-24)
 - 🔧 Tool Orchestrator - Multi-step action chains
 - 💬 Natural Language Interface - Conversational commands
 - ✅ Task & Workflow Manager - GTD-style task tracking
@@ -172,6 +172,8 @@ Friday is built with **privacy-first** principles:
 | 3 | SYSTEM_WRITE | System configuration changes |
 | 4 | EXECUTE | Shell command execution |
 | 5 | ADMIN | Elevated/dangerous operations |
+| 6 | SAFE_DELETE | Deleting standard files |
+| 7 | DANGEROUS_DELETE | Deleting system or protected files |
 
 ### Safety Features
 - ✅ **Approval Workflow** - Destructive actions require explicit user approval
@@ -225,7 +227,7 @@ Friday is being built incrementally, one module per day:
 | Day | Module | Status |
 |-----|--------|--------|
 | 1 | Permission & Safety Governor | ✅ Complete |
-| 2 | OS Operator | 📋 Planned |
+| 2 | OS Operator & Search Index | ✅ Complete |
 | 3 | Tool Orchestrator | 📋 Planned |
 | 4 | Natural Language Interface | 📋 Planned |
 | 5 | Task & Workflow Manager | 📋 Planned |
