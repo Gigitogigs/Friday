@@ -49,7 +49,7 @@ Friday is built as a **modular, security-first offline AI assistant** with three
                           ↓
 ┌─────────────────────────────────────────────────────────┐
 │              Execution Layer (Modules)                   │
-│  • OS Operations                                        │
+│  • OS Operations & File Search                          │
 │  • Task Management                                      │
 │  • Knowledge Base                                       │
 │  • ... (21 more modules)                               │
@@ -79,6 +79,8 @@ Friday is built as a **modular, security-first offline AI assistant** with three
   - `SYSTEM_WRITE (3)`: System config changes
   - `EXECUTE (4)`: Shell commands
   - `ADMIN (5)`: Dangerous operations
+  - `SAFE_DELETE (6)`: Removing standard user files
+  - `DANGEROUS_DELETE (7)`: Removing system or protected files
 
 - `ActionRequest` (Dataclass): Represents an action to be performed
   ```python
@@ -188,6 +190,18 @@ Paris is the capital of France.
 Filtered Output:
 Paris is the capital of France.
 ```
+
+---
+
+### 4. File Indexer (`core/file_indexer.py`)
+
+**Purpose:** Persistent SQLite-based file indexing for rapid searches.
+
+**Key Features:**
+- **Persistent Storage**: Uses a local SQLite database (`data/file_index.db`).
+- **Resilient Crawling**: Uses `os.walk` with custom error handlers to gracefully skip `PermissionError` restricted folders on Windows.
+- **Rich Metadata**: Extracts and stores file extensions, sizes, and `last_modified` timestamps using `os.stat`.
+- **Injection Protection**: Enforces parameterized queries (`?`) during `LIKE` searches.
 
 ---
 
@@ -373,6 +387,7 @@ class ExampleModule:
 | Module | Permission Level | Description |
 |--------|-----------------|-------------|
 | OS Operator | SAFE_WRITE | File/folder operations |
+| File Indexer | READ | SQLite file search |
 | Tool Orchestrator | EXECUTE | Multi-step workflows |
 | Task Manager | SAFE_WRITE | GTD task tracking |
 | Knowledge Base | READ | Document indexing |

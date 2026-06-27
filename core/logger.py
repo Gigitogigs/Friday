@@ -30,6 +30,7 @@ class ActionStatus(Enum):
     APPROVED = "approved"
     DENIED = "denied"
     EXECUTED = "executed"
+    SUCCESS = "success"
     FAILED = "failed"
     DRY_RUN = "dry_run"
 
