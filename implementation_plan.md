@@ -9,8 +9,8 @@ This document provides a daily breakdown of the Friday project, extending from D
 | Day | Module | Permission Level |
 |-----|--------|------------------|
 | **1** | Permission & Safety Governor | ✅ Done |
-| **2** | OS Operator (Files/Folders) | `SAFE_WRITE` |
-| **3** | OS Destroyer-Lite (Safe Delete) | `DELETE` |
+| **2** | OS Operator (Files/Folders) | ✅ Done |
+| **3** | OS Destroyer-Lite (Safe Delete) | ✅ Done |
 | **4** | Tool Orchestrator (Chains) | `EXECUTE` |
 | **5** | Natural Language Interface (NLI) | `READ` |
 | **6** | Task & Workflow Manager | `SAFE_WRITE` |
