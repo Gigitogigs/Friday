@@ -8,12 +8,13 @@ Friday is a comprehensive offline personal assistant that helps with task manage
 
 ## 🌟 Features
 
-### Currently Implemented (Day 1 & 2)
+### Currently Implemented (Days 1 - 3)
 - ✅ **Permission & Safety Governor** - Security-first architecture with approval workflows
 - ✅ **Audit Logging** - Complete action history in append-only JSONL format
 - ✅ **Local LLM Integration** - Powered by Ollama
 - ✅ **CLI Interface** - Interactive chat and command-line tools
-- ✅ **OS Operator & Search** - Full file management with persistent SQLite indexing
+- ✅ **OS Operator (Day 2)** - Full file management, reading, and indexing capabilities
+- ✅ **OS Destroyer-Lite (Day 3)** - Safe deletion using OS trash/recycle bin with dry-run support
 
 ### Planned Features (Days 3-24)
 - 🔧 Tool Orchestrator - Multi-step action chains
@@ -222,19 +223,20 @@ python -m pytest tests/test_permission_manager.py -v
 
 ## 📅 Development Roadmap
 
-Friday is being built incrementally, one module per day:
+Friday is being built incrementally, following our [24-Day Development Roadmap](implementation_plan.md). 
 
 | Day | Module | Status |
 |-----|--------|--------|
 | 1 | Permission & Safety Governor | ✅ Complete |
-| 2 | OS Operator & Search Index | ✅ Complete |
-| 3 | Tool Orchestrator | 📋 Planned |
-| 4 | Natural Language Interface | 📋 Planned |
-| 5 | Task & Workflow Manager | 📋 Planned |
+| 2 | OS Operator (Files/Folders) | ✅ Complete |
+| 3 | OS Destroyer-Lite (Safe Delete) | ✅ Complete |
+| 4 | Tool Orchestrator (Chains) | 📋 Planned |
+| 5 | Natural Language Interface | 📋 Planned |
+| 6 | Task & Workflow Manager | 📋 Planned |
 | ... | ... | ... |
-| 24 | Experimentation & Sandbox | 📋 Planned |
+| 24 | Experimentation Sandbox | 📋 Planned |
 
-See the full [implementation plan](docs/plans/) for details.
+See the [implementation_plan.md](implementation_plan.md) file for full technical details, requirements, and the status of all 24 modules.
 
 ---
 
@@ -242,15 +244,19 @@ See the full [implementation plan](docs/plans/) for details.
 
 We welcome contributions from the community! Friday is an open-source project and we'd love your help making it better.
 
+### What to Build Next?
+Before you start, please read the [Implementation Plan](implementation_plan.md). It outlines the 24-day roadmap, explaining exactly what modules are required, their security permission levels, and specific sub-tasks. Choose any "Planned" module to contribute to!
+
 ### How to Contribute
 
-1. **Fork the repository**
-2. **Create a feature branch** (`git checkout -b feature/amazing-feature`)
-3. **Make your changes** and add tests
-4. **Run the test suite** (`python -m pytest tests/ -v`)
-5. **Commit your changes** (`git commit -m 'Add amazing feature'`)
-6. **Push to your branch** (`git push origin feature/amazing-feature`)
-7. **Open a Pull Request**
+1. **Check the Roadmap:** Pick a module from [implementation_plan.md](implementation_plan.md)
+2. **Fork the repository**
+3. **Create a feature branch** (`git checkout -b feature/amazing-feature`)
+4. **Make your changes** and add tests
+5. **Run the test suite** (`python -m pytest tests/ -v`)
+6. **Commit your changes** (`git commit -m 'Add amazing feature'`)
+7. **Push to your branch** (`git push origin feature/amazing-feature`)
+8. **Open a Pull Request**
 
 ### Development Setup
 
