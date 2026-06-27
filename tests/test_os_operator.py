@@ -16,14 +16,16 @@ from core.logger import AuditLogger, ActionType, ActionStatus
 
 #CREATE FIXTURES(KINDA LIKE TEST VARIABLES OF FUNCTIONS IN THE PROGRAM)
 @pytest.fixture
-def mock_logger():
-    """Provides a dummy logger that does bot actually write to disk."""
-    return AuditLogger(log_path="dummy_log.jsonl")
+def mock_logger(tmp_path):
+    """Provides a dummy logger that writes to a temporary directory."""
+    return AuditLogger(log_path=str(tmp_path / "dummy_log.jsonl"))
 
 @pytest.fixture
-def mock_permission_manager():
+def mock_permission_manager(tmp_path):
     """provides a PermissionManager that is configured to allow everything for testing"""
-    pm = PermissionManager(config_path="dummy_config.yaml")
+    config_file = tmp_path / "dummy_config.yaml"
+    config_file.write_text("friday:\n  permissions:\n    auto_approve: []\n")
+    pm = PermissionManager(config_path=str(config_file))
     pm.set_approval_callback(lambda desc, preview: True)
     return pm
 
