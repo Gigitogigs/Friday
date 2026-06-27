@@ -5,13 +5,16 @@ import shutil
 import platform
 import sys
 import glob
+import send2trash 
 
 from .logger import ActionType, ActionStatus, AuditLogger
 from .permission_manager import PermissionManager, PermissionLevel, ActionResult, ActionRequest
 from .file_indexer import FileIndexer
 
+
+
 class OS_Operator:
-    def __init__(self, permission_manager: PermissionManager, logger: AuditLogger, file_indexer: FileIndexer = None):
+    def __init__(self, permission_manager: PermissionManager, logger: AuditLogger, file_indexer: FileIndexer = None,):
         self.logger = logger
         self.permission_manager = permission_manager
         self.file_indexer = file_indexer
@@ -555,12 +558,13 @@ class OS_Operator:
                 message=f"Error appending to {target_path}: {str(e)}"
             )
 
-    def delete_item(self, path:str) -> ActionResult:
+    def delete_item(self, path:str, dry_run:bool = False) -> ActionResult:
         """
-        Deletes an item (file or directory) at the specified path.
+        Soft Deletes an item (file or directory) at the specified path. It moves the item to the OS trash/recycle bin.
 
         Args:
             path: The path to the item to delete.
+            dry_run: If True, the item will not be deleted.
 
         Returns:
             ActionResult: A result object.
@@ -592,10 +596,29 @@ class OS_Operator:
                     message=f"File not found: {target_path}"
                 )
 
-            if target_path.is_dir():
-                shutil.rmtree(str(target_path))
-            else:
-                target_path.unlink()
+            if dry_run:
+                impacted_files = []
+                if target_path.is_dir():
+                    impacted_files = [str(p) for p in target_path.rglob('*')]
+                impacted_files.append(str(target_path))
+                
+                self.logger.log_action(
+                    action_type=ActionType.DELETE,
+                    description=f"Dry run: Would delete {target_path}",
+                    permission_level=PermissionLevel.SAFE_DELETE.value,
+                    status=ActionStatus.SUCCESS,
+                    metadata={"target": str(target_path)}
+                )
+                
+                return ActionResult(
+                    success=True,
+                    status="success",
+                    message=f"DRY RUN: Would have safely deleted {target_path}",
+                    data={"impacted_files": impacted_files}
+                )
+
+            #uses send2trash library to route the file to OS's recycle bin for both files and directories
+            send2trash.send2trash(str(target_path))
 
             self.logger.log_action(
                 action_type=ActionType.DELETE,
